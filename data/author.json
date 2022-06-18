@@ -1,0 +1,9 @@
+[
+    {
+        "authorpic": "path",
+        "bio": "text",
+        "email": "text",
+        "name": "text",
+        "slug": "text"
+    }
+]

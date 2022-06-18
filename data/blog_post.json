@@ -1,0 +1,13 @@
+[ 
+    {
+        "authorId": 1, 
+        "tags": ["tag1", "tag2"],
+        "uuid": "[set by the DB]",
+        "headline": "The Last Pigeon",
+        "heroimage": "path",
+        "history": "stringfied version of the html of the article",
+        "publishdate": "2022-06-05",
+        "slug": "Among the game birds, passenger pigeons were second only to the wild turkey (Meleagris gallopavo) in terms of importance for the Native Americans living in the southeastern United States",
+        "type": "Lost_foods"
+    }
+]
