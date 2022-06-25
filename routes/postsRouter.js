@@ -3,8 +3,22 @@ const postsRouter = express.Router();
 const db = require("../database/client");
 
 // 1.Get all posts:
+// postsRouter.get("/", (req, res) => {
+//  db.query("SELECT * FROM posts ORDER BY post_id ASC")
+//    .then((data) => res.json(data.rows))
+//    .catch((error) => res.status(500).send(error.message));
+// });
+
+// 1a.Get all posts with pagination:
 postsRouter.get("/", (req, res) => {
-  db.query("SELECT * FROM posts ORDER BY post_id ASC")
+  const getAllPagination = {
+    text: `SELECT *
+          FROM posts
+          ORDER BY post_id ASC
+          LIMIT 6`,
+  };
+
+  db.query(getAllPagination)
     .then((data) => res.json(data.rows))
     .catch((error) => res.status(500).send(error.message));
 });

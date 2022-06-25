@@ -1,7 +1,10 @@
 require("dotenv").config();
+const cors = require("cors");
 const express = require("express");
 const app = express();
 app.use(express.json());
+app.use(cors());
+app.use(express.static("assets"));
 const PORT = process.env.PORT || 3000;
 
 const postsRouter = require("./routes/postsRouter");

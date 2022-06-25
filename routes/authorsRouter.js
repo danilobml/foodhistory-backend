@@ -9,7 +9,7 @@ authorsRouter.get("/", (req, res) => {
     .catch((error) => res.status(500).send(error.message));
 });
 
-// 2.Get one post
+// 2.Get one author
 authorsRouter.get("/:id", (req, res) => {
   const { id } = req.params;
   const getOneAuthor = {
@@ -28,7 +28,12 @@ authorsRouter.get("/:id/posts", (req, res) => {
   const getAuthorPosts = {
     text: `SELECT
           headline,
-          post_id
+          post_id,
+          a.name,
+          a.authorpic,
+          a.slug,
+          a.bio,
+          a.email
           FROM
           posts p
           INNER JOIN authors a
