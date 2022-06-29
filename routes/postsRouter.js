@@ -14,8 +14,7 @@ postsRouter.get("/", (req, res) => {
   const getAllPagination = {
     text: `SELECT *
           FROM posts
-          ORDER BY post_id ASC
-          LIMIT 6`,
+          ORDER BY post_id ASC`,
   };
 
   db.query(getAllPagination)
