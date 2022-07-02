@@ -3,30 +3,47 @@ const postsRouter = express.Router();
 const db = require("../database/client");
 
 // 1.Get all posts:
-// postsRouter.get("/", (req, res) => {
-//  db.query("SELECT * FROM posts ORDER BY post_id ASC")
-//    .then((data) => res.json(data.rows))
-//    .catch((error) => res.status(500).send(error.message));
-// });
-
-// 1a.Get all posts with pagination:
 postsRouter.get("/", (req, res) => {
-  const getAllPagination = {
-    text: `SELECT *
-          FROM posts
-          ORDER BY post_id ASC`,
-  };
-
-  db.query(getAllPagination)
+  db.query("SELECT * FROM posts ORDER BY post_id ASC")
     .then((data) => res.json(data.rows))
     .catch((error) => res.status(500).send(error.message));
 });
 
-// 2.Get one post
-postsRouter.get("/:id", (req, res) => {
+// 3.Get all posts with pagination:
+postsRouter.get("/:page", async (req, res) => {
+  const { page } = req.params;
+  console.log(page);
+
+  const { rows: postsCount } = await db.query("SELECT COUNT(post_id) FROM posts");
+
+  const multiplied = page * 6;
+  const offset = multiplied - 6;
+  const getAllPagination = {
+    text: `SELECT *
+          FROM posts
+          ORDER BY post_id ASC
+          LIMIT 6
+          OFFSET $1`,
+    values: [offset],
+  };
+
+  db.query(getAllPagination)
+    .then((data) =>
+      res.json({
+        count: Number(postsCount[0].count),
+        posts: data.rows,
+      })
+    )
+    .catch((error) => res.status(500).send(error.message));
+});
+
+// 3.Get one post
+postsRouter.get("/post/:id", (req, res) => {
   const { id } = req.params;
   const getOnePost = {
-    text: `SELECT * FROM posts p
+    text: `SELECT *,
+            p.slug
+           FROM posts p
            LEFT JOIN authors a
             ON p.author_id = a.author_id
             WHERE post_id = $1`,
