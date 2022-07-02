@@ -9,11 +9,9 @@ postsRouter.get("/", (req, res) => {
     .catch((error) => res.status(500).send(error.message));
 });
 
-// 3.Get all posts with pagination:
+// 2.Get all posts with pagination:
 postsRouter.get("/:page", async (req, res) => {
   const { page } = req.params;
-  console.log(page);
-
   const { rows: postsCount } = await db.query("SELECT COUNT(post_id) FROM posts");
 
   const multiplied = page * 6;
@@ -50,6 +48,39 @@ postsRouter.get("/post/:id", (req, res) => {
     values: [id],
   };
   db.query(getOnePost)
+    .then((data) => res.json(data.rows))
+    .catch((error) => res.status(500).send(error.message));
+});
+
+// 4. Get Search:
+postsRouter.get("/results/:search", (req, res) => {
+  const { search } = req.params;
+  const searchParam = `% ${search} %`;
+
+  const getSearched = {
+    text: `SELECT *
+          FROM posts
+          WHERE history LIKE $1;`,
+    values: [searchParam],
+  };
+
+  db.query(getSearched)
+    .then((data) => res.json(data.rows))
+    .catch((error) => res.status(500).send(error.message));
+});
+
+// 5. Get Category:
+postsRouter.get("/categories/:category", (req, res) => {
+  const { category } = req.params;
+
+  const getSearched = {
+    text: `SELECT *
+          FROM posts
+          WHERE type = $1;`,
+    values: [category],
+  };
+
+  db.query(getSearched)
     .then((data) => res.json(data.rows))
     .catch((error) => res.status(500).send(error.message));
 });
