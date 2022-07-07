@@ -60,7 +60,14 @@ postsRouter.get("/results/:search", (req, res) => {
   const getSearched = {
     text: `SELECT *
           FROM posts
-          WHERE history LIKE $1;`,
+          WHERE headline LIKE $1
+            OR history LIKE $1
+            OR slug LIKE $1
+            OR EXISTS (
+              SELECT *
+              FROM unnest(tags) elem
+              WHERE elem LIKE $1
+            );`,
     values: [searchParam],
   };
 
