@@ -52,23 +52,18 @@ postsRouter.get("/post/:id", (req, res) => {
     .catch((error) => res.status(500).send(error.message));
 });
 
-// 4. Get Search:
+// 4. Get Search(bar) results:
 postsRouter.get("/results/:search", (req, res) => {
   const { search } = req.params;
-  const searchParam = `% ${search} %`;
+  const searchParam1 = `% ${search} %`;
 
   const getSearched = {
     text: `SELECT *
           FROM posts
-          WHERE headline LIKE $1
-            OR history LIKE $1
-            OR slug LIKE $1
-            OR EXISTS (
-              SELECT *
-              FROM unnest(tags) elem
-              WHERE elem LIKE $1
-            );`,
-    values: [searchParam],
+          WHERE headline ILIKE $1
+            OR history ILIKE $1
+            OR slug ILIKE $1;`,
+    values: [searchParam1],
   };
 
   db.query(getSearched)
@@ -76,18 +71,18 @@ postsRouter.get("/results/:search", (req, res) => {
     .catch((error) => res.status(500).send(error.message));
 });
 
-// 5. Get Category:
+// 5. Get, filtered by Category:
 postsRouter.get("/categories/:category", (req, res) => {
   const { category } = req.params;
 
-  const getSearched = {
+  const getFilteredByCategory = {
     text: `SELECT *
           FROM posts
           WHERE type = $1;`,
     values: [category],
   };
 
-  db.query(getSearched)
+  db.query(getFilteredByCategory)
     .then((data) => res.json(data.rows))
     .catch((error) => res.status(500).send(error.message));
 });
